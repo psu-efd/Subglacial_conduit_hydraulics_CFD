@@ -1,0 +1,30 @@
+How to run the case.
+
+### Prerequisites
+1. Linux system (e.g., Ubuntu)
+2. OpenFOAM (version 3.0.x)
+3. MPI if runing with parallel processors.
+
+### Usage.
+1. Using chomod +x name to modify "Allclean" and "Allrun" into executables.
+2. Runing "Allclean" first, and then run "Allrun".
+3. When the runing is done, the mesh has been generated, however, we need
+   to modify the boundary patch in constant/polyMesh/boundary file.
+   For the current case, there are 10 patches in the boundary file. 
+   We need to delete unused patches (from blockMesh), including "leftB,rightB,
+   frontB, backB,bottomB, topB", and keep the other patches. When we delete
+   patches, we need to change the patch number in the boundary file. 
+4. In current case, we used mapped interal boundary to get fully developed
+   inlet flow. Thus, the patch "left" in the boudary file has to be modified. 
+   The nFaces and startFace should not be changed. The type should be changed.
+   And also, we need to set some extra parameters for the mapped boundary. 
+5. An example boundary file is provided here with a name "boundary.example",
+   please refer to that file for modifying boundaryies.
+6. Initial and boundary conditions: copy the 0.org into 0.
+7. When it comes to runing the case. Please first choose if you are running
+   in a seriel mode or in parallel mode.
+   If in series model, uncomment the "runApplication $application"
+   If in parallel mode, first assign the "numberOfSubdomains" in system/decomposerParDict
+   , and then uncommet the commands in "Multiple processors" in "Allrun".
+
+#################################################################################

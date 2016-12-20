@@ -1,0 +1,36 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+# copy motorbike surface from resources directory
+nProc=$(getNumberOfProcessors)
+
+# Copy STL file and surfaceSubset to local dir
+./Allclean
+mkdir ./0
+
+## Grid generation.
+runApplication surfaceFeatureExtract -dict ./system/surfaceFeatureExtractDict
+runApplication blockMesh
+runApplication snappyHexMesh -overwrite &
+
+# Before moving to the next step, please check the
+# boundary file in constant/polyMesh
+# to make sure the number, names, and types of the boundary patches are correct.
+###############################################################################
+
+
+## Grid decompose
+#runApplication decomposePar
+
+####Choose one of the following #################################
+############# Multiple processors.
+#runApplication decomposePar
+#runParallel $application $nProc  &                                  # Runing with multiple processors.
+
+############# Single processor ################################
+#runApplication $application &                                        # Runing with a single procoessor.
+
+# ----------------------------------------------------------------- end-of-file

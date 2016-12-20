@@ -1,0 +1,96 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2.2.2                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+application     pimpleFoam;
+
+startFrom       latestTime;
+
+startTime       0;
+
+stopAt          endTime;
+
+endTime         20;
+
+deltaT          1e-4;
+
+writeControl    adjustableRunTime;
+//writeControl    timeStep;
+
+writeInterval   0.1;
+
+purgeWrite      0;
+
+writeFormat     ascii;
+
+writePrecision  6;
+
+writeCompression off;
+
+timeFormat      general;
+
+timePrecision   6;
+
+runTimeModifiable true;
+
+adjustTimeStep  yes;
+
+maxCo           0.2;
+maxDeltaT       1e-4;
+
+functions
+{
+    fieldAverage1
+    {
+        type            fieldAverage;
+        functionObjectLibs ("libfieldFunctionObjects.so");
+        restartOnRestart false;    // Whether averaging from the begining (false) or from a new start points.
+        restartOnOutput  false;    // Whether start the average from the time the data is output.
+        periodicRestart  false;    // Whether restart the average every fixed time.
+        //restartPeriod    0.002;  // Required if periodicRestart is true.
+        startTime 0.1;             // When to start to take the time average.
+        endTime   20;               //When to end the time average.
+        outputControl   outputTime;
+        fields
+        (
+            U
+            {
+                mean        on;
+                prime2Mean  on;
+                base        time;   // use time or interation.
+               // window      10.0;
+               // windowName  w1;
+            }
+
+            p
+            {
+                mean        on;
+                prime2Mean  on;
+                base        time;
+            }
+
+            k
+            {
+                mean        on;
+                prime2Mean  off;
+                base        time;
+            }
+
+        );
+    }
+}
+
+// ************************************************************************* //
